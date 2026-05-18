@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Compact Stroller Study</title>
+<style>
+  :root {
+    --primary: #1F3864;
+    --accent: #4472C4;
+    --bg: #F7F8FA;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B7280;
+    --border: #D1D5DB;
+    --good: #2E7D32;
+    --warn: #C62828;
+    --slot: #ECEFF1;
+    --slot-fill: #E3F2FD;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 64px;
+  }
+  h1 { color: var(--primary); margin-top: 0; }
+  h2 { color: var(--primary); margin-top: 28px; }
+  p { margin: 12px 0; }
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+  }
+  .button {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .button:hover { background: var(--accent); }
+  .button:disabled { background: #B0B0B0; cursor: not-allowed; }
+  .button.secondary { background: #6B7280; }
+  .button.secondary:hover { background: #4B5563; }
+  .button.good { background: var(--good); }
+  label { display: block; margin: 12px 0 4px; font-weight: 600; }
+  input[type="text"], input[type="number"], input[type="email"], select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #FFF;
+  }
+  textarea { min-height: 80px; resize: vertical; }
+  .radio-group { margin: 6px 0; }
+  .radio-group label { display: inline-block; font-weight: normal; margin-right: 16px; }
+  .progress {
+    background: #E5E7EB;
+    border-radius: 999px;
+    height: 8px;
+    margin: 16px 0 24px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    background: var(--primary);
+    height: 100%;
+    transition: width 0.3s;
+  }
+  .scale-key {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .grid-wrap {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 76px;
+  }
+  .col-header {
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: var(--primary);
+  }
+  .col-count {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .slot {
+    width: 72px;
+    height: 56px;
+    background: var(--slot);
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    text-align: center;
+    padding: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    word-break: break-word;
+    line-height: 1.15;
+    transition: background 0.15s;
+  }
+  .slot.filled {
+    background: var(--slot-fill);
+    border: 1px solid var(--accent);
+    color: var(--primary);
+    font-weight: 500;
+  }
+  .slot.target {
+    background: #FFF59D;
+    border: 2px solid #F57F17;
+  }
+  .pool {
+    margin-top: 24px;
+  }
+  .pool-title {
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .pool-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pool-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    cursor: pointer;
+    max-width: 280px;
+    font-size: 13px;
+    line-height: 1.3;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .pool-card:hover {
+    border-color: var(--accent);
+    background: #F0F6FF;
+  }
+  .pool-card.selected {
+    border: 2px solid var(--primary);
+    background: #DBEAFE;
+    box-shadow: 0 0 0 3px rgba(31,56,100,0.2);
+  }
+  .pool-card .stmt-num {
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .selected-card-banner {
+    position: sticky;
+    top: 0;
+    background: #FFF3CD;
+    border: 2px solid #F57F17;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    z-index: 10;
+    font-size: 14px;
+  }
+  .selected-card-banner strong { color: var(--primary); }
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F0F6FF;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .help {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 8px 0;
+  }
+  .image-placeholder {
+    display: inline-block;
+    background: #FEF3C7;
+    border: 1px dashed #D97706;
+    color: #92400E;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  details summary { cursor: pointer; font-weight: 600; color: var(--primary); padding: 4px 0; }
+  details ul { margin: 8px 0; }
+  .small { font-size: 13px; color: var(--muted); }
+  .alert {
+    background: #FEE2E2;
+    border: 1px solid #DC2626;
+    color: #7F1D1D;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 12px 0;
+  }
+  .success {
+    background: #D1FAE5;
+    border: 1px solid #059669;
+    color: #064E3B;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 12px 0;
+  }
+  @media (max-width: 720px) {
+    .container { padding: 12px 8px 48px; }
+    .slot { width: 56px; height: 48px; font-size: 10px; }
+    .col-header { font-size: 12px; }
+    .column { min-width: 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ============ CONSENT PAGE ============ -->
+<div id="page-consent" class="page">
+  <div class="card">
+    <h1>Premium Compact Stroller Study</h1>
+    <p>Thank you for taking part in this research. The study asks how parents think about safety, price, usability, brand, and other factors when choosing a premium compact stroller.</p>
+    <h2>What you will be asked to do</h2>
+    <ul>
+      <li>Answer a few short questions about yourself (about 2 minutes).</li>
+      <li>Sort 51 statements from "most disagree" to "most agree" when thinking about your decision to buy a premium compact stroller (about 15-20 minutes).</li>
+      <li>Answer 3 short follow-up questions about your sort.</li>
+    </ul>
+    <h2>Your data</h2>
+    <ul>
+      <li>Participation is voluntary. You can stop at any time.</li>
+      <li>Your responses are anonymous. We do not collect your name, email, or IP address.</li>
+      <li>Data will be used only for this master's thesis study and stored according to GDPR.</li>
+    </ul>
+    <p><label><input type="checkbox" id="consent-checkbox"> I have read the information above and consent to participate.</label></p>
+    <button class="button" id="consent-btn" disabled onclick="goto('demographics')">Start the study</button>
+  </div>
+</div>
+
+<!-- ============ DEMOGRAPHICS PAGE ============ -->
+<div id="page-demographics" class="page" style="display:none;">
+  <div class="card">
+    <h1>A few questions about you</h1>
+    <p class="help">This helps me understand who took part. All answers are anonymous.</p>
+
+    <label for="d-country">Country of residence</label>
+    <select id="d-country">
+      <option value="">-- Please select --</option>
+      <option>Austria</option><option>Belgium</option><option>Bulgaria</option><option>Croatia</option>
+      <option>Cyprus</option><option>Czech Republic</option><option>Denmark</option><option>Estonia</option>
+      <option>Finland</option><option>France</option><option>Germany</option><option>Greece</option>
+      <option>Hungary</option><option>Ireland</option><option>Italy</option><option>Latvia</option>
+      <option>Lithuania</option><option>Luxembourg</option><option>Malta</option><option>Netherlands</option>
+      <option>Poland</option><option>Portugal</option><option>Romania</option><option>Slovakia</option>
+      <option>Slovenia</option><option>Spain</option><option>Sweden</option>
+      <option>United Kingdom</option><option>Switzerland</option><option>Norway</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="d-age">Your age range</label>
+    <select id="d-age">
+      <option value="">-- Please select --</option>
+      <option>Under 25</option><option>25-29</option><option>30-34</option>
+      <option>35-39</option><option>40-44</option><option>45 or older</option>
+    </select>
+
+    <label for="d-children">Number of children (any age)</label>
+    <select id="d-children">
+      <option value="">-- Please select --</option>
+      <option>0 (expecting first)</option><option>1</option><option>2</option><option>3 or more</option>
+    </select>
+
+    <label for="d-youngest">Age of youngest child (or expected baby)</label>
+    <select id="d-youngest">
+      <option value="">-- Please select --</option>
+      <option>Pregnant / expecting</option>
+      <option>0-6 months</option><option>7-12 months</option>
+      <option>1-2 years</option><option>3-4 years</option>
+      <option>5 or older</option>
+    </select>
+
+    <label for="d-ownstroller">Do you currently own a stroller?</label>
+    <select id="d-ownstroller">
+      <option value="">-- Please select --</option>
+      <option>No</option>
+      <option>Yes - non-premium (under EUR 300)</option>
+      <option>Yes - mid-range (EUR 300-500)</option>
+      <option>Yes - premium (EUR 500+)</option>
+    </select>
+
+    <label for="d-brand">If you own one, which brand? (optional)</label>
+    <input type="text" id="d-brand" placeholder="e.g. Bugaboo, Joolz, Cybex, Maxi-Cosi, Stokke...">
+
+    <label for="d-budget">Budget range you would consider for a stroller</label>
+    <select id="d-budget">
+      <option value="">-- Please select --</option>
+      <option>Under EUR 300</option><option>EUR 300-500</option>
+      <option>EUR 500-800</option><option>EUR 800-1200</option><option>EUR 1200+</option>
+    </select>
+
+    <label for="d-firsttime">Are you a first-time parent?</label>
+    <select id="d-firsttime">
+      <option value="">-- Please select --</option>
+      <option>Yes</option><option>No</option><option>Expecting first child</option>
+    </select>
+
+    <div style="margin-top:24px; display:flex; justify-content:space-between;">
+      <button class="button secondary" onclick="goto('consent')">Back</button>
+      <button class="button" id="demo-next-btn" onclick="submitDemographics()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ INSTRUCTIONS PAGE ============ -->
+<div id="page-instructions" class="page" style="display:none;">
+  <div class="card">
+    <h1>How the sort works</h1>
+    <p>You will see 51 statements about premium compact strollers. Your job is to sort them into a pyramid grid from "<strong>most disagree</strong>" on the left (-5) to "<strong>most agree</strong>" on the right (+5).</p>
+    <h2>The condition</h2>
+    <p>As you sort each statement, ask yourself:</p>
+    <p style="background:#FEF3C7; padding:14px; border-radius:6px; border-left:4px solid #D97706; font-weight:600;">"How important is this factor in MY decision to buy a premium compact stroller?"</p>
+    <h2>How to place a statement</h2>
+    <ol>
+      <li>Click a statement from the pool at the bottom to select it.</li>
+      <li>Click any empty slot in the grid to place it.</li>
+      <li>Click a placed card to move it back to the pool, or click another slot to swap.</li>
+    </ol>
+    <h2>The grid</h2>
+    <p>The grid has fixed column sizes (a fixed number of slots in each column). You must fill every slot to finish. The middle column (0) is for statements you feel neutral about.</p>
+    <p class="help">Tip: Start by sorting roughly - place statements in any column on the side you broadly agree or disagree with. Then refine.</p>
+    <div style="margin-top:24px; display:flex; justify-content:space-between;">
+      <button class="button secondary" onclick="goto('demographics')">Back</button>
+      <button class="button" onclick="goto('sort')">Start the sort</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SORT PAGE ============ -->
+<div id="page-sort" class="page" style="display:none;">
+  <div class="card">
+    <h1>Sort the statements</h1>
+    <div class="status-bar">
+      <span id="status-text">0 of 51 placed</span>
+      <span><strong>Question:</strong> How important is this factor in MY decision to buy a premium compact stroller?</span>
+    </div>
+    <div id="selected-banner" class="selected-card-banner" style="display:none;"></div>
+    <div class="progress"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+    <div class="scale-key">
+      <span>← Most disagree</span>
+      <span>Neutral</span>
+      <span>Most agree →</span>
+    </div>
+    <div class="grid-wrap" id="grid"></div>
+
+    <div class="pool">
+      <div class="pool-title">Pool: statements still to place (<span id="pool-count">51</span>)</div>
+      <div class="pool-list" id="pool"></div>
+    </div>
+
+    <div style="margin-top:24px; display:flex; justify-content:space-between;">
+      <button class="button secondary" onclick="goto('instructions')">Back to instructions</button>
+      <button class="button" id="sort-next-btn" disabled onclick="goto('postsort')">Continue when all 51 placed</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ POST-SORT PAGE ============ -->
+<div id="page-postsort" class="page" style="display:none;">
+  <div class="card">
+    <h1>Three short follow-up questions</h1>
+
+    <label for="ps-mostagree">1. Why did you place the statements you put at the "+5 / most agree" end where they are?</label>
+    <textarea id="ps-mostagree" placeholder="A sentence or two is fine."></textarea>
+
+    <label for="ps-mostdisagree">2. Why did you place the statements you put at the "-5 / most disagree" end where they are?</label>
+    <textarea id="ps-mostdisagree" placeholder="A sentence or two is fine."></textarea>
+
+    <label for="ps-missing">3. Is there anything important about choosing a premium compact stroller that none of the 51 statements captured?</label>
+    <textarea id="ps-missing" placeholder="Optional - leave blank if nothing comes to mind."></textarea>
+
+    <div style="margin-top:24px; display:flex; justify-content:space-between;">
+      <button class="button secondary" onclick="goto('sort')">Back to the sort</button>
+      <button class="button good" onclick="finishStudy()">Finish and download my responses</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FINISH PAGE ============ -->
+<div id="page-finish" class="page" style="display:none;">
+  <div class="card">
+    <h1>Thank you!</h1>
+    <p>Your sort is complete.</p>
+    <div id="finish-status"></div>
+    <h2>About this study</h2>
+    <p>This research is part of a master's thesis on parents' priorities when choosing premium compact strollers. Your sort will be combined with others using Q-method analysis to identify shared viewpoints.</p>
+    <p class="small">If you have any questions or need to re-download your responses, you can do so below.</p>
+    <button class="button secondary" onclick="downloadCSV()">Download my responses</button>
+  </div>
+</div>
+
+<!-- Hidden iframe used as submission target to bypass CORS -->
+<iframe id="submission_iframe" name="submission_iframe" style="display:none;"></iframe>
+
+<script>
+// ============ CONFIG ============
+// Paste your Google Apps Script Web App URL here AFTER following SETUP-GOOGLE-SHEETS.md
+// Example: "https://script.google.com/macros/s/AKfycbxxxxx/exec"
+// If left as the placeholder below, responses will only be downloadable as CSV.
+const SUBMISSION_URL = "https://script.google.com/macros/s/AKfycbxkDxZw0I7LmgDZh8k1PG_dvZ_wj13t8ukqR6uiiowC0eFNdNBPELcmuE7BrfT-g4hZ/exec";
+
+// Researcher contact email (shown on the finish page)
+const RESEARCHER_EMAIL = "gursahiba10@gmail.com";
+
+// ============ DATA ============
+const STATEMENTS = [
+  { n: 1,  text: "A 5-point harness keeping the child safely in place is essential to me.", cat: "Safety", code: "SF01", image: true },
+  { n: 2,  text: "A buckle that fastens reliably is an important factor in my decision.", cat: "Safety", code: "SF01", image: true },
+  { n: 3,  text: "A system that stops the stroller from rolling away if I let go of the handle is an important factor in my decision.", cat: "Safety", code: "SF02", image: false },
+  { n: 4,  text: "A wrist or tether strap connecting me to the stroller is an important factor in my decision.", cat: "Safety", code: "SF02", image: true },
+  { n: 5,  text: "A reliable parking brake that holds firmly on a slope is essential to me.", cat: "Safety", code: "SF03", image: false },
+  { n: 6,  text: "Suspension that keeps the stroller stable on uneven ground is an important factor in my decision.", cat: "Safety", code: "SF04", image: false },
+  { n: 7,  text: "A wide, low base that keeps the stroller upright is an important factor in my decision.", cat: "Safety", code: "SF04", image: false },
+  { n: 8,  text: "A folding mechanism that stays securely locked while my child is inside is an important factor in my decision.", cat: "Safety", code: "SF05", image: false },
+  { n: 9,  text: "Protection against finger pinching during folding is an important factor in my decision.", cat: "Safety", code: "SF05", image: false },
+  { n: 10, text: "Ergonomic seating that supports my child's posture is an important factor in my decision.", cat: "Safety", code: "SF06", image: false },
+  { n: 11, text: "A fully flat-lying recline that allows safe use from birth is essential to me.", cat: "Safety", code: "SF07", image: true },
+  { n: 12, text: "Breathable fabrics that help my child breathe easily are essential to me.", cat: "Safety", code: "SF08", image: false },
+  { n: 13, text: "A sun canopy with verified UV protection (e.g. UPF 50+) is an important factor in my decision.", cat: "Safety", code: "SF09", image: false },
+  { n: 14, text: "Good airflow inside the canopy and seat to keep my child cool is an important factor in my decision.", cat: "Safety", code: "SF10", image: false },
+  { n: 15, text: "Protection from cold temperatures (thermal lining, footmuff) is an important factor in my decision.", cat: "Safety", code: "SF11", image: false },
+  { n: 16, text: "Protection from rain and wind (rain cover, windscreen) is an important factor in my decision.", cat: "Safety", code: "SF11", image: false },
+  { n: 17, text: "Cool-touch fabrics that stay comfortable in direct sunlight are an important factor in my decision.", cat: "Safety", code: "SF12", image: false },
+  { n: 18, text: "Being able to see my child easily while walking is an important factor in my decision.", cat: "Safety", code: "SF13", image: false },
+  { n: 19, text: "Integrated lights and reflective details for evening walks are an important factor in my decision.", cat: "Safety", code: "SF14", image: false },
+  { n: 20, text: "A bumper bar across the front of the seat is an important factor in my decision.", cat: "Safety", code: "SF15", image: false },
+  { n: 21, text: "A stroller made from certified non-toxic materials is essential to me.", cat: "Safety", code: "SF16", image: false },
+  { n: 22, text: "Independent safety testing by a named, recognised organisation is an important factor in my decision.", cat: "Verification", code: "VER", image: false },
+  { n: 23, text: "A stroller meeting European safety standards (e.g. EN 1888) is essential to me.", cat: "Verification", code: "VER", image: false },
+  { n: 24, text: "A brand that publishes its actual test results is an important factor in my decision.", cat: "Verification", code: "VER", image: false },
+  { n: 25, text: "A brand that allows independent inspection of its factory (not only of the finished product) is an important factor in my decision.", cat: "Verification", code: "VER", image: false },
+  { n: 26, text: "A higher price reassures me that a stroller is well-engineered.", cat: "Price", code: "PR", image: false },
+  { n: 27, text: "I am willing to spend more than EUR 500 on a stroller if it offers premium safety and quality features.", cat: "Price", code: "PR", image: false },
+  { n: 28, text: "Strong resale value is an important factor in my decision.", cat: "Price", code: "PR", image: false },
+  { n: 29, text: "I would rather buy one premium stroller than several cheaper ones over time.", cat: "Price", code: "PR", image: false },
+  { n: 30, text: "The cost of accessories (carrycot, car-seat adapters, footmuff) is an important factor in my decision.", cat: "Price", code: "PR", image: true },
+  { n: 31, text: "A one-handed fold is an important factor in my decision.", cat: "Usability", code: "US", image: false },
+  { n: 32, text: "A lightweight stroller (under 8 kg) is an important factor in my decision.", cat: "Usability", code: "US", image: false },
+  { n: 33, text: "A stroller that fits easily into a car boot is an important factor in my decision.", cat: "Usability", code: "US", image: false },
+  { n: 34, text: "A large storage basket under the seat is an important factor in my decision.", cat: "Usability", code: "US", image: false },
+  { n: 35, text: "A reversible seat (parent-facing or world-facing) is an important factor in my decision.", cat: "Usability", code: "US", image: false },
+  { n: 36, text: "A stroller that takes up little space when folded (e.g. fits in a hallway) is an important factor in my decision.", cat: "Usability", code: "US", image: false },
+  { n: 37, text: "An adjustable handle height that suits different family members is an important factor in my decision.", cat: "Caregiver ergonomics", code: "CE", image: false },
+  { n: 38, text: "A stroller that is comfortable for me to push on long walks is an important factor in my decision.", cat: "Caregiver ergonomics", code: "CE", image: false },
+  { n: 39, text: "A stroller that is easy to steer with one hand is an important factor in my decision.", cat: "Caregiver ergonomics", code: "CE", image: false },
+  { n: 40, text: "Compatibility with my preferred car seat is an important factor in my decision.", cat: "Compatibility", code: "CO", image: false },
+  { n: 41, text: "The option to add a carrycot for newborn use is an important factor in my decision.", cat: "Compatibility", code: "CO", image: true },
+  { n: 42, text: "A stroller that can be adapted as my child grows (from carrycot to seat) is an important factor in my decision.", cat: "Compatibility", code: "CO", image: false },
+  { n: 43, text: "A wide range of available accessories (cup holder, parasol, footmuff) is an important factor in my decision.", cat: "Compatibility", code: "CO", image: false },
+  { n: 44, text: "The option to convert the stroller into a double for a second child is an important factor in my decision.", cat: "Compatibility", code: "CO", image: false },
+  { n: 45, text: "A brand's heritage and years of experience are an important factor in my decision.", cat: "Brand", code: "BR", image: false },
+  { n: 46, text: "Country of origin (e.g. Made in Italy, Germany, the Netherlands) is an important factor in my decision.", cat: "Brand", code: "BR", image: false },
+  { n: 47, text: "A brand collaboration with a luxury car or fashion label is an important factor in my decision.", cat: "Brand", code: "BR", image: false },
+  { n: 48, text: "Recommendations from friends and family are an important factor in my decision.", cat: "Brand", code: "BR", image: false },
+  { n: 49, text: "A brand that handles past recalls openly and transparently is an important factor in my decision.", cat: "Brand", code: "BR", image: false },
+  { n: 50, text: "The visual design and colour of the stroller is an important factor in my decision.", cat: "Other", code: "OT", image: false },
+  { n: 51, text: "Sustainable materials and ethical production are an important factor in my decision.", cat: "Other", code: "OT", image: false },
+];
+
+// Distribution: -5 to +5, total = 51
+// 2-3-4-5-7-9-7-5-4-3-2
+const DISTRIBUTION = [
+  { value: -5, slots: 2 },
+  { value: -4, slots: 3 },
+  { value: -3, slots: 4 },
+  { value: -2, slots: 5 },
+  { value: -1, slots: 7 },
+  { value:  0, slots: 9 },
+  { value:  1, slots: 7 },
+  { value:  2, slots: 5 },
+  { value:  3, slots: 4 },
+  { value:  4, slots: 3 },
+  { value:  5, slots: 2 },
+];
+
+// ============ STATE ============
+const state = {
+  consent: false,
+  demographics: {},
+  placements: {}, // statementNumber -> column value (-5 to 5)
+  selectedStatement: null,
+  postsort: {},
+  startTime: null,
+  endTime: null,
+  participantId: genId(),
+  submitted: false,
+  submissionStatus: null, // 'ok' | 'error' | null
+};
+
+function genId() {
+  return 'p_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+}
+
+// ============ NAVIGATION ============
+function goto(page) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.getElementById('page-' + page).style.display = 'block';
+  window.scrollTo(0, 0);
+  if (page === 'sort') renderSort();
+}
+
+// ============ CONSENT ============
+document.getElementById('consent-checkbox').addEventListener('change', (e) => {
+  state.consent = e.target.checked;
+  document.getElementById('consent-btn').disabled = !state.consent;
+});
+
+// ============ DEMOGRAPHICS ============
+function submitDemographics() {
+  const fields = ['country','age','children','youngest','ownstroller','brand','budget','firsttime'];
+  const d = {};
+  let missingRequired = false;
+  fields.forEach(f => {
+    const el = document.getElementById('d-' + f);
+    d[f] = el.value;
+    if (f !== 'brand' && !el.value) missingRequired = true;
+  });
+  if (missingRequired) {
+    alert('Please answer all questions (only the brand name is optional).');
+    return;
+  }
+  state.demographics = d;
+  state.startTime = new Date().toISOString();
+  goto('instructions');
+}
+
+// ============ SORT ============
+function renderSort() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  DISTRIBUTION.forEach(col => {
+    const colDiv = document.createElement('div');
+    colDiv.className = 'column';
+    colDiv.innerHTML = `<div class="col-header">${col.value > 0 ? '+'+col.value : col.value}</div><div class="col-count">${col.slots} slots</div>`;
+    for (let i = 0; i < col.slots; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+      slot.dataset.col = col.value;
+      slot.dataset.idx = i;
+      slot.onclick = () => slotClick(col.value, i, slot);
+      // check if a placed statement belongs here
+      const placedStmt = Object.keys(state.placements).find(n =>
+        state.placements[n].col === col.value && state.placements[n].idx === i
+      );
+      if (placedStmt) {
+        slot.classList.add('filled');
+        slot.textContent = '#' + placedStmt;
+      }
+      colDiv.appendChild(slot);
+    }
+    grid.appendChild(colDiv);
+  });
+  renderPool();
+  updateStatus();
+}
+
+function renderPool() {
+  const pool = document.getElementById('pool');
+  pool.innerHTML = '';
+  const unplaced = STATEMENTS.filter(s => !state.placements[s.n]);
+  unplaced.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'pool-card';
+    if (state.selectedStatement === s.n) card.classList.add('selected');
+    card.innerHTML = `<span class="stmt-num">${s.n}.</span>${escapeHtml(s.text)}${s.image ? '<span class="image-placeholder">image: '+s.code+'</span>' : ''}`;
+    card.onclick = () => selectStatement(s.n);
+    pool.appendChild(card);
+  });
+  document.getElementById('pool-count').textContent = unplaced.length;
+}
+
+function selectStatement(n) {
+  state.selectedStatement = (state.selectedStatement === n) ? null : n;
+  renderPool();
+  updateBanner();
+  highlightAvailableSlots();
+}
+
+function highlightAvailableSlots() {
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('target'));
+  if (state.selectedStatement) {
+    document.querySelectorAll('.slot:not(.filled)').forEach(s => s.classList.add('target'));
+  }
+}
+
+function updateBanner() {
+  const banner = document.getElementById('selected-banner');
+  if (state.selectedStatement) {
+    const stmt = STATEMENTS.find(s => s.n === state.selectedStatement);
+    banner.innerHTML = `<strong>Selected: Statement ${stmt.n}.</strong> ${escapeHtml(stmt.text)}<br><span class="help">Click any empty slot to place it, or click another statement to switch.</span>`;
+    banner.style.display = 'block';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+function slotClick(col, idx, slotEl) {
+  // Case 1: there is a placed statement here -> move it back to pool
+  const placedN = Object.keys(state.placements).find(n =>
+    state.placements[n].col === col && state.placements[n].idx === idx
+  );
+  if (placedN) {
+    delete state.placements[placedN];
+    renderSort();
+    return;
+  }
+  // Case 2: a statement is selected -> place it
+  if (state.selectedStatement) {
+    state.placements[state.selectedStatement] = { col, idx };
+    state.selectedStatement = null;
+    renderSort();
+    return;
+  }
+  // Case 3: empty slot, nothing selected -> nudge
+  // (do nothing, just keep showing pool)
+}
+
+function updateStatus() {
+  const placed = Object.keys(state.placements).length;
+  const total = STATEMENTS.length;
+  document.getElementById('status-text').textContent = `${placed} of ${total} placed`;
+  document.getElementById('progress-fill').style.width = ((placed / total) * 100) + '%';
+  document.getElementById('sort-next-btn').disabled = (placed < total);
+  if (placed === total) {
+    document.getElementById('sort-next-btn').textContent = 'Continue to follow-up questions';
+  }
+}
+
+// ============ POST-SORT ============
+async function finishStudy() {
+  state.postsort.mostagree = document.getElementById('ps-mostagree').value;
+  state.postsort.mostdisagree = document.getElementById('ps-mostdisagree').value;
+  state.postsort.missing = document.getElementById('ps-missing').value;
+  state.endTime = new Date().toISOString();
+
+  // Show submitting state
+  goto('finish');
+  renderFinishStatus('submitting');
+
+  // Try to submit to Google Sheets if configured
+  let submissionOk = false;
+  if (SUBMISSION_URL && !SUBMISSION_URL.startsWith('PASTE_')) {
+    try {
+      submissionOk = await submitToSheet();
+    } catch (err) {
+      console.error('Submission failed:', err);
+      submissionOk = false;
+    }
+  }
+  state.submitted = submissionOk;
+  state.submissionStatus = submissionOk ? 'ok' : 'error';
+  renderFinishStatus(submissionOk ? 'ok' : 'error');
+
+  // Always offer the CSV as a backup
+  downloadCSV();
+}
+
+async function submitToSheet() {
+  // Hidden-form submission via iframe target.
+  // This bypasses CORS entirely - Apps Script Web Apps don't return permissive
+  // CORS headers to fetch(), so we use a classic form POST instead.
+  // Trade-off: we can't read the response body, so we assume success once the
+  // iframe loads or after a short timeout. The CSV download remains as backup.
+  return new Promise((resolve) => {
+    const payload = {
+      participant_id: state.participantId,
+      start_time: state.startTime,
+      end_time: state.endTime,
+      demographics: state.demographics,
+      placements: Object.fromEntries(
+        Object.entries(state.placements).map(([k, v]) => [k, v.col])
+      ),
+      postsort: state.postsort,
+    };
+
+    const iframe = document.getElementById('submission_iframe');
+    if (!iframe) {
+      resolve(false);
+      return;
+    }
+
+    let resolved = false;
+    const finish = (ok) => {
+      if (resolved) return;
+      resolved = true;
+      clearTimeout(timer);
+      iframe.onload = null;
+      resolve(ok);
+    };
+
+    // If the iframe loads (i.e. Apps Script responded with anything), call it a success.
+    iframe.onload = () => finish(true);
+
+    // Safety net: even if onload never fires (some browsers swallow it for cross-origin),
+    // assume the POST went through after 8 seconds.
+    const timer = setTimeout(() => finish(true), 8000);
+
+    // Build and submit a real form into the hidden iframe.
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = SUBMISSION_URL;
+    form.target = 'submission_iframe';
+    form.acceptCharset = 'UTF-8';
+    form.enctype = 'application/x-www-form-urlencoded';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload';
+    input.value = JSON.stringify(payload);
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    try {
+      form.submit();
+    } catch (err) {
+      finish(false);
+    }
+    setTimeout(() => {
+      if (form.parentNode) form.parentNode.removeChild(form);
+    }, 100);
+  });
+}
+
+function renderFinishStatus(status) {
+  const el = document.getElementById('finish-status');
+  if (!el) return;
+  if (status === 'submitting') {
+    el.innerHTML = '<div style="background:#FEF3C7;border:1px solid #D97706;padding:14px;border-radius:6px;"><strong>Submitting your responses...</strong><br>Please keep this page open for a few seconds.</div>';
+  } else if (status === 'ok') {
+    el.innerHTML = '<div class="success"><strong>Your responses have been sent.</strong> Thank you for taking part. A backup copy has also been downloaded to your computer - you can keep or delete it.</div>';
+  } else if (status === 'error') {
+    el.innerHTML = '<div class="alert"><strong>Automatic submission did not go through.</strong> Your responses have been downloaded as a CSV file. <strong>Please email that CSV file to the researcher at ' + escapeHtml(RESEARCHER_EMAIL) + '</strong> so your responses are included in the study. Thank you!</div>';
+  }
+}
+
+// ============ CSV EXPORT ============
+function generateCSV() {
+  const lines = [];
+  // Metadata block
+  lines.push('# Q-Sort Response Export');
+  lines.push('# Generated: ' + new Date().toISOString());
+  lines.push('# Start time: ' + (state.startTime || ''));
+  lines.push('# End time: ' + (state.endTime || ''));
+  lines.push('');
+  // Demographics
+  lines.push('## DEMOGRAPHICS');
+  lines.push('field,value');
+  Object.keys(state.demographics).forEach(k => {
+    lines.push(csvEscape(k) + ',' + csvEscape(state.demographics[k]));
+  });
+  lines.push('');
+  // Sort data (KADE-compatible format: one row per statement)
+  lines.push('## SORT (KADE format)');
+  lines.push('statement_number,statement_text,category,code,position');
+  STATEMENTS.forEach(s => {
+    const pos = state.placements[s.n] ? state.placements[s.n].col : '';
+    lines.push([s.n, csvEscape(s.text), csvEscape(s.cat), csvEscape(s.code), pos].join(','));
+  });
+  lines.push('');
+  // Sort vector (one row, positions in statement order - native KADE format)
+  lines.push('## SORT VECTOR (one column per statement)');
+  lines.push(STATEMENTS.map(s => 'S' + s.n).join(','));
+  lines.push(STATEMENTS.map(s => state.placements[s.n] ? state.placements[s.n].col : '').join(','));
+  lines.push('');
+  // Post-sort
+  lines.push('## POST-SORT');
+  lines.push('question,answer');
+  lines.push('most_agree_reason,' + csvEscape(state.postsort.mostagree || ''));
+  lines.push('most_disagree_reason,' + csvEscape(state.postsort.mostdisagree || ''));
+  lines.push('missing_topics,' + csvEscape(state.postsort.missing || ''));
+  return lines.join('\n');
+}
+
+function csvEscape(v) {
+  if (v == null) return '';
+  v = String(v);
+  if (v.includes(',') || v.includes('"') || v.includes('\n')) {
+    return '"' + v.replace(/"/g, '""') + '"';
+  }
+  return v;
+}
+
+function downloadCSV() {
+  const csv = generateCSV();
+  const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  const id = Math.random().toString(36).slice(2, 8);
+  const filename = `qsort_${ts}_${id}.csv`;
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ============ UTILS ============
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+// ============ INIT ============
+goto('consent');
+</script>
+</div>
+</body>
+</html>
