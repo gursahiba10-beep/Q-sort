@@ -221,6 +221,18 @@
     margin-left: 6px;
     vertical-align: middle;
   }
+  .pool-card { display: flex; align-items: center; gap: 10px; }
+  .pool-card-text { flex: 1; }
+  .pool-card-img {
+    width: 60px; height: 60px; object-fit: cover;
+    border-radius: 4px; border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .banner-img {
+    display: block; max-width: 240px; max-height: 180px;
+    margin-top: 10px; border-radius: 6px;
+    border: 1px solid var(--border);
+  }
   details summary { cursor: pointer; font-weight: 600; color: var(--primary); padding: 4px 0; }
   details ul { margin: 8px 0; }
   .small { font-size: 13px; color: var(--muted); }
@@ -452,57 +464,57 @@ const RESEARCHER_EMAIL = "G.K.Dharni@student.tudelft.nl";
 
 // ============ DATA ============
 const STATEMENTS = [
-  { n: 1,  text: "A 5-point harness keeping the child safely in place is essential to me.", cat: "Safety", code: "SF01", image: true },
-  { n: 2,  text: "A buckle that fastens reliably is an important factor in my decision.", cat: "Safety", code: "SF01", image: true },
-  { n: 3,  text: "A system that stops the stroller from rolling away if I let go of the handle is an important factor in my decision.", cat: "Safety", code: "SF02", image: false },
-  { n: 4,  text: "A wrist or tether strap connecting me to the stroller is an important factor in my decision.", cat: "Safety", code: "SF02", image: true },
-  { n: 5,  text: "A reliable parking brake that holds firmly on a slope is essential to me.", cat: "Safety", code: "SF03", image: false },
-  { n: 6,  text: "Suspension that keeps the stroller stable on uneven ground is an important factor in my decision.", cat: "Safety", code: "SF04", image: false },
-  { n: 7,  text: "A wide, low base that keeps the stroller upright is an important factor in my decision.", cat: "Safety", code: "SF04", image: false },
-  { n: 8,  text: "A folding mechanism that stays securely locked while my child is inside is an important factor in my decision.", cat: "Safety", code: "SF05", image: false },
-  { n: 9,  text: "Protection against finger pinching during folding is an important factor in my decision.", cat: "Safety", code: "SF05", image: false },
-  { n: 10, text: "Ergonomic seating that supports my child's posture is an important factor in my decision.", cat: "Safety", code: "SF06", image: false },
-  { n: 11, text: "A fully flat-lying recline that allows safe use from birth is essential to me.", cat: "Safety", code: "SF07", image: true },
-  { n: 12, text: "Breathable fabrics that help my child breathe easily are essential to me.", cat: "Safety", code: "SF08", image: false },
-  { n: 13, text: "A sun canopy with verified UV protection (e.g. UPF 50+) is an important factor in my decision.", cat: "Safety", code: "SF09", image: false },
-  { n: 14, text: "Good airflow inside the canopy and seat to keep my child cool is an important factor in my decision.", cat: "Safety", code: "SF10", image: false },
-  { n: 15, text: "Protection from cold temperatures (thermal lining, footmuff) is an important factor in my decision.", cat: "Safety", code: "SF11", image: false },
-  { n: 16, text: "Protection from rain and wind (rain cover, windscreen) is an important factor in my decision.", cat: "Safety", code: "SF11", image: false },
-  { n: 17, text: "Cool-touch fabrics that stay comfortable in direct sunlight are an important factor in my decision.", cat: "Safety", code: "SF12", image: false },
-  { n: 18, text: "Being able to see my child easily while walking is an important factor in my decision.", cat: "Safety", code: "SF13", image: false },
-  { n: 19, text: "Integrated lights and reflective details for evening walks are an important factor in my decision.", cat: "Safety", code: "SF14", image: false },
-  { n: 20, text: "A bumper bar across the front of the seat is an important factor in my decision.", cat: "Safety", code: "SF15", image: false },
-  { n: 21, text: "A stroller made from certified non-toxic materials is essential to me.", cat: "Safety", code: "SF16", image: false },
-  { n: 22, text: "Independent safety testing by a named, recognised organisation is an important factor in my decision.", cat: "Verification", code: "VER", image: false },
-  { n: 23, text: "A stroller meeting European safety standards (e.g. EN 1888) is essential to me.", cat: "Verification", code: "VER", image: false },
-  { n: 24, text: "A brand that publishes its actual test results is an important factor in my decision.", cat: "Verification", code: "VER", image: false },
-  { n: 25, text: "A brand that allows independent inspection of its factory (not only of the finished product) is an important factor in my decision.", cat: "Verification", code: "VER", image: false },
-  { n: 26, text: "A higher price reassures me that a stroller is well-engineered.", cat: "Price", code: "PR", image: false },
-  { n: 27, text: "I am willing to spend more than EUR 500 on a stroller if it offers premium safety and quality features.", cat: "Price", code: "PR", image: false },
-  { n: 28, text: "Strong resale value is an important factor in my decision.", cat: "Price", code: "PR", image: false },
-  { n: 29, text: "I would rather buy one premium stroller than several cheaper ones over time.", cat: "Price", code: "PR", image: false },
-  { n: 30, text: "The cost of accessories (carrycot, car-seat adapters, footmuff) is an important factor in my decision.", cat: "Price", code: "PR", image: true },
-  { n: 31, text: "A one-handed fold is an important factor in my decision.", cat: "Usability", code: "US", image: false },
-  { n: 32, text: "A lightweight stroller (under 8 kg) is an important factor in my decision.", cat: "Usability", code: "US", image: false },
-  { n: 33, text: "A stroller that fits easily into a car boot is an important factor in my decision.", cat: "Usability", code: "US", image: false },
-  { n: 34, text: "A large storage basket under the seat is an important factor in my decision.", cat: "Usability", code: "US", image: false },
-  { n: 35, text: "A reversible seat (parent-facing or world-facing) is an important factor in my decision.", cat: "Usability", code: "US", image: false },
-  { n: 36, text: "A stroller that takes up little space when folded (e.g. fits in a hallway) is an important factor in my decision.", cat: "Usability", code: "US", image: false },
-  { n: 37, text: "An adjustable handle height that suits different family members is an important factor in my decision.", cat: "Caregiver ergonomics", code: "CE", image: false },
-  { n: 38, text: "A stroller that is comfortable for me to push on long walks is an important factor in my decision.", cat: "Caregiver ergonomics", code: "CE", image: false },
-  { n: 39, text: "A stroller that is easy to steer with one hand is an important factor in my decision.", cat: "Caregiver ergonomics", code: "CE", image: false },
-  { n: 40, text: "Compatibility with my preferred car seat is an important factor in my decision.", cat: "Compatibility", code: "CO", image: false },
-  { n: 41, text: "The option to add a carrycot for newborn use is an important factor in my decision.", cat: "Compatibility", code: "CO", image: true },
-  { n: 42, text: "A stroller that can be adapted as my child grows (from carrycot to seat) is an important factor in my decision.", cat: "Compatibility", code: "CO", image: false },
-  { n: 43, text: "A wide range of available accessories (cup holder, parasol, footmuff) is an important factor in my decision.", cat: "Compatibility", code: "CO", image: false },
-  { n: 44, text: "The option to convert the stroller into a double for a second child is an important factor in my decision.", cat: "Compatibility", code: "CO", image: false },
-  { n: 45, text: "A brand's heritage and years of experience are an important factor in my decision.", cat: "Brand", code: "BR", image: false },
-  { n: 46, text: "Country of origin (e.g. Made in Italy, Germany, the Netherlands) is an important factor in my decision.", cat: "Brand", code: "BR", image: false },
-  { n: 47, text: "A brand collaboration with a luxury car or fashion label is an important factor in my decision.", cat: "Brand", code: "BR", image: false },
-  { n: 48, text: "Recommendations from friends and family are an important factor in my decision.", cat: "Brand", code: "BR", image: false },
-  { n: 49, text: "A brand that handles past recalls openly and transparently is an important factor in my decision.", cat: "Brand", code: "BR", image: false },
-  { n: 50, text: "The visual design and colour of the stroller is an important factor in my decision.", cat: "Other", code: "OT", image: false },
-  { n: 51, text: "Sustainable materials and ethical production are an important factor in my decision.", cat: "Other", code: "OT", image: false },
+  { n: 1,  text: "A 5-point harness keeping the child safely in place is essential to me.", cat: "Safety", code: "SF01", image: "images/harness.jpg" },
+  { n: 2,  text: "A buckle that fastens reliably is an important factor in my decision.", cat: "Safety", code: "SF01", image: "images/buckle.jpg" },
+  { n: 3,  text: "A system that stops the stroller from rolling away if I let go of the handle is an important factor in my decision.", cat: "Safety", code: "SF02", image: "" },
+  { n: 4,  text: "A wrist or tether strap connecting me to the stroller is an important factor in my decision.", cat: "Safety", code: "SF02", image: "images/tether-strap.jpg" },
+  { n: 5,  text: "A reliable parking brake that holds firmly on a slope is essential to me.", cat: "Safety", code: "SF03", image: "" },
+  { n: 6,  text: "Suspension that keeps the stroller stable on uneven ground is an important factor in my decision.", cat: "Safety", code: "SF04", image: "" },
+  { n: 7,  text: "A wide, low base that keeps the stroller upright is an important factor in my decision.", cat: "Safety", code: "SF04", image: "" },
+  { n: 8,  text: "A folding mechanism that stays securely locked while my child is inside is an important factor in my decision.", cat: "Safety", code: "SF05", image: "" },
+  { n: 9,  text: "Protection against finger pinching during folding is an important factor in my decision.", cat: "Safety", code: "SF05", image: "" },
+  { n: 10, text: "Ergonomic seating that supports my child's posture is an important factor in my decision.", cat: "Safety", code: "SF06", image: "" },
+  { n: 11, text: "A fully flat-lying recline that allows safe use from birth is essential to me.", cat: "Safety", code: "SF07", image: "images/recline.jpg" },
+  { n: 12, text: "Breathable fabrics that help my child breathe easily are essential to me.", cat: "Safety", code: "SF08", image: "" },
+  { n: 13, text: "A sun canopy with verified UV protection (e.g. UPF 50+) is an important factor in my decision.", cat: "Safety", code: "SF09", image: "" },
+  { n: 14, text: "Good airflow inside the canopy and seat to keep my child cool is an important factor in my decision.", cat: "Safety", code: "SF10", image: "" },
+  { n: 15, text: "Protection from cold temperatures (thermal lining, footmuff) is an important factor in my decision.", cat: "Safety", code: "SF11", image: "" },
+  { n: 16, text: "Protection from rain and wind (rain cover, windscreen) is an important factor in my decision.", cat: "Safety", code: "SF11", image: "" },
+  { n: 17, text: "Cool-touch fabrics that stay comfortable in direct sunlight are an important factor in my decision.", cat: "Safety", code: "SF12", image: "" },
+  { n: 18, text: "Being able to see my child easily while walking is an important factor in my decision.", cat: "Safety", code: "SF13", image: "" },
+  { n: 19, text: "Integrated lights and reflective details for evening walks are an important factor in my decision.", cat: "Safety", code: "SF14", image: "" },
+  { n: 20, text: "A bumper bar across the front of the seat is an important factor in my decision.", cat: "Safety", code: "SF15", image: "" },
+  { n: 21, text: "A stroller made from certified non-toxic materials is essential to me.", cat: "Safety", code: "SF16", image: "" },
+  { n: 22, text: "Independent safety testing by a named, recognised organisation is an important factor in my decision.", cat: "Verification", code: "VER", image: "" },
+  { n: 23, text: "A stroller meeting European safety standards (e.g. EN 1888) is essential to me.", cat: "Verification", code: "VER", image: "" },
+  { n: 24, text: "A brand that publishes its actual test results is an important factor in my decision.", cat: "Verification", code: "VER", image: "" },
+  { n: 25, text: "A brand that allows independent inspection of its factory (not only of the finished product) is an important factor in my decision.", cat: "Verification", code: "VER", image: "" },
+  { n: 26, text: "A higher price reassures me that a stroller is well-engineered.", cat: "Price", code: "PR", image: "" },
+  { n: 27, text: "I am willing to spend more than EUR 500 on a stroller if it offers premium safety and quality features.", cat: "Price", code: "PR", image: "" },
+  { n: 28, text: "Strong resale value is an important factor in my decision.", cat: "Price", code: "PR", image: "" },
+  { n: 29, text: "I would rather buy one premium stroller than several cheaper ones over time.", cat: "Price", code: "PR", image: "" },
+  { n: 30, text: "The cost of accessories (carrycot, car-seat adapters, footmuff) is an important factor in my decision.", cat: "Price", code: "PR", image: "images/accessories.jpg" },
+  { n: 31, text: "A one-handed fold is an important factor in my decision.", cat: "Usability", code: "US", image: "" },
+  { n: 32, text: "A lightweight stroller (under 8 kg) is an important factor in my decision.", cat: "Usability", code: "US", image: "" },
+  { n: 33, text: "A stroller that fits easily into a car boot is an important factor in my decision.", cat: "Usability", code: "US", image: "" },
+  { n: 34, text: "A large storage basket under the seat is an important factor in my decision.", cat: "Usability", code: "US", image: "" },
+  { n: 35, text: "A reversible seat (parent-facing or world-facing) is an important factor in my decision.", cat: "Usability", code: "US", image: "" },
+  { n: 36, text: "A stroller that takes up little space when folded (e.g. fits in a hallway) is an important factor in my decision.", cat: "Usability", code: "US", image: "" },
+  { n: 37, text: "An adjustable handle height that suits different family members is an important factor in my decision.", cat: "Caregiver ergonomics", code: "CE", image: "" },
+  { n: 38, text: "A stroller that is comfortable for me to push on long walks is an important factor in my decision.", cat: "Caregiver ergonomics", code: "CE", image: "" },
+  { n: 39, text: "A stroller that is easy to steer with one hand is an important factor in my decision.", cat: "Caregiver ergonomics", code: "CE", image: "" },
+  { n: 40, text: "Compatibility with my preferred car seat is an important factor in my decision.", cat: "Compatibility", code: "CO", image: "" },
+  { n: 41, text: "The option to add a carrycot for newborn use is an important factor in my decision.", cat: "Compatibility", code: "CO", image: "images/carrycot.jpg" },
+  { n: 42, text: "A stroller that can be adapted as my child grows (from carrycot to seat) is an important factor in my decision.", cat: "Compatibility", code: "CO", image: "" },
+  { n: 43, text: "A wide range of available accessories (cup holder, parasol, footmuff) is an important factor in my decision.", cat: "Compatibility", code: "CO", image: "" },
+  { n: 44, text: "The option to convert the stroller into a double for a second child is an important factor in my decision.", cat: "Compatibility", code: "CO", image: "" },
+  { n: 45, text: "A brand's heritage and years of experience are an important factor in my decision.", cat: "Brand", code: "BR", image: "" },
+  { n: 46, text: "Country of origin (e.g. Made in Italy, Germany, the Netherlands) is an important factor in my decision.", cat: "Brand", code: "BR", image: "" },
+  { n: 47, text: "A brand collaboration with a luxury car or fashion label is an important factor in my decision.", cat: "Brand", code: "BR", image: "" },
+  { n: 48, text: "Recommendations from friends and family are an important factor in my decision.", cat: "Brand", code: "BR", image: "" },
+  { n: 49, text: "A brand that handles past recalls openly and transparently is an important factor in my decision.", cat: "Brand", code: "BR", image: "" },
+  { n: 50, text: "The visual design and colour of the stroller is an important factor in my decision.", cat: "Other", code: "OT", image: "" },
+  { n: 51, text: "Sustainable materials and ethical production are an important factor in my decision.", cat: "Other", code: "OT", image: "" },
 ];
 
 // Distribution: -5 to +5, total = 51
@@ -610,7 +622,11 @@ function renderPool() {
     const card = document.createElement('div');
     card.className = 'pool-card';
     if (state.selectedStatement === s.n) card.classList.add('selected');
-    card.innerHTML = `<span class="stmt-num">${s.n}.</span>${escapeHtml(s.text)}${s.image ? '<span class="image-placeholder">image: '+s.code+'</span>' : ''}`;
+    const textHtml = `<div class="pool-card-text"><span class="stmt-num">${s.n}.</span>${escapeHtml(s.text)}</div>`;
+    const imgHtml = s.image
+      ? `<img class="pool-card-img" src="${escapeHtml(s.image)}" alt="" onerror="this.style.display='none'">`
+      : '';
+    card.innerHTML = textHtml + imgHtml;
     card.onclick = () => selectStatement(s.n);
     pool.appendChild(card);
   });
@@ -635,7 +651,10 @@ function updateBanner() {
   const banner = document.getElementById('selected-banner');
   if (state.selectedStatement) {
     const stmt = STATEMENTS.find(s => s.n === state.selectedStatement);
-    banner.innerHTML = `<strong>Selected: Statement ${stmt.n}.</strong> ${escapeHtml(stmt.text)}<br><span class="help">Click any empty slot to place it, or click another statement to switch.</span>`;
+    const imgHtml = stmt.image
+      ? `<img class="banner-img" src="${escapeHtml(stmt.image)}" alt="" onerror="this.style.display='none'">`
+      : '';
+    banner.innerHTML = `<strong>Selected: Statement ${stmt.n}.</strong> ${escapeHtml(stmt.text)}${imgHtml}<br><span class="help">Click any empty slot to place it, or click another statement to switch.</span>`;
     banner.style.display = 'block';
   } else {
     banner.style.display = 'none';
