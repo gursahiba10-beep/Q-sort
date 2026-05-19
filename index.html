@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Premium Compact Stroller Study</title>
+<title>Safety, Signals, and Stroller Adoption - TU Delft MSc Study</title>
 <style>
   :root {
     --primary: #1F3864;
@@ -254,22 +254,24 @@
 <!-- ============ CONSENT PAGE ============ -->
 <div id="page-consent" class="page">
   <div class="card">
-    <h1>Premium Compact Stroller Study</h1>
-    <p>Thank you for taking part in this research. The study asks how parents think about safety, price, usability, brand, and other factors when choosing a premium compact stroller.</p>
-    <h2>What you will be asked to do</h2>
-    <ul>
-      <li>Answer a few short questions about yourself (about 2 minutes).</li>
-      <li>Sort 51 statements from "most disagree" to "most agree" when thinking about your decision to buy a premium compact stroller (about 15-20 minutes).</li>
-      <li>Answer 3 short follow-up questions about your sort.</li>
-    </ul>
-    <h2>Your data</h2>
-    <ul>
-      <li>Participation is voluntary. You can stop at any time.</li>
-      <li>Your responses are anonymous. We do not collect your name, email, or IP address.</li>
-      <li>Data will be used only for this master's thesis study and stored according to GDPR.</li>
-    </ul>
-    <p><label><input type="checkbox" id="consent-checkbox"> I have read the information above and consent to participate.</label></p>
-    <button class="button" id="consent-btn" disabled onclick="goto('demographics')">Start the study</button>
+    <h1>Safety, Signals, and Stroller Adoption: Parental Decision-Making in the Dutch Stroller Market</h1>
+    <p>You are being invited to participate in a research study titled "Safety, Signals, and Stroller Adoption: Parental Decision-Making in the Dutch Stroller Market." This study is being conducted by Gursahiba Dharni, a Master's student at Delft University of Technology (TU Delft), Faculty of Technology, Policy and Management, under the supervision of Dr Karolien van Nunen.</p>
+
+    <p>The purpose of this research is to understand how parents weigh safety relative to other factors such as usability, price, compatibility, and brand when choosing a premium compact stroller in the Netherlands. The findings will contribute to academic research in consumer safety and product adoption, and will be used for the completion of a publicly accessible Master's thesis at TU Delft.</p>
+
+    <p>If you agree to participate, you will be asked to complete a Q-sort activity (approximately 20-30 minutes), in which you rank approximately 50 short statements about stroller attributes on a grid from "most disagree" to "most agree." Your Q-sort responses will be collected and stored anonymously. No names or directly identifying information will be retained as part of the research data. Only basic demographic information will be collected (e.g., age range, number of children, whether this is your first stroller).</p>
+
+    <p>All data will be stored securely on TU Delft institutional systems, accessible only to the researcher and supervisors. Your rankings will be made public to support the associated MSc thesis.</p>
+
+    <p>Your participation is entirely voluntary. You may refuse to answer any question and may withdraw at any time without giving a reason and without any consequences. Because Q-sort data are collected anonymously, it may not be possible to remove your individual responses after submission.</p>
+
+    <p>If you have any questions about this study, please contact Gursahiba Dharni at <a href="mailto:G.K.Dharni@student.tudelft.nl">G.K.Dharni@student.tudelft.nl</a> or Dr Karolien van Nunen at <a href="mailto:K.L.L.vanNunen@tudelft.nl">K.L.L.vanNunen@tudelft.nl</a>.</p>
+
+    <p>Thank you for considering participation in this research.</p>
+
+    <p style="margin-top: 24px;"><label><input type="checkbox" id="consent-checkbox"> By clicking on "Ok", I indicate that I have read and understood the information above and consent to participate.</label></p>
+
+    <button class="button" id="consent-btn" disabled onclick="goto('demographics')">Ok</button>
   </div>
 </div>
 
@@ -446,7 +448,7 @@
 const SUBMISSION_URL = "https://script.google.com/macros/s/AKfycbxkDxZw0I7LmgDZh8k1PG_dvZ_wj13t8ukqR6uiiowC0eFNdNBPELcmuE7BrfT-g4hZ/exec";
 
 // Researcher contact email (shown on the finish page)
-const RESEARCHER_EMAIL = "gursahiba10@gmail.com";
+const RESEARCHER_EMAIL = "G.K.Dharni@student.tudelft.nl";
 
 // ============ DATA ============
 const STATEMENTS = [
