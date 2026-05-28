@@ -1,1 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veiligheid, indicatoren en adoptie van kinderwagens — TU Delft MSc Onderzoek</title>
+<style>
+  :root {
+    --primary: #1F3864;
+    --accent: #4472C4;
+    --bg: #F7F8FA;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B7280;
+    --border: #D1D5DB;
+    --good: #2E7D32;
+    --warn: #C62828;
+    --slot: #ECEFF1;
+    --slot-fill: #E3F2FD;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 64px;
+  }
+  h1 { color: var(--primary); margin-top: 0; }
+  h2 { color: var(--primary); margin-top: 28px; }
+  p { margin: 12px 0; }
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+  }
+  .button {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .button:hover { background: var(--accent); }
+  .button:disabled { background: #B0B0B0; cursor: not-allowed; }
+  .button.secondary { background: #6B7280; }
+  .button.secondary:hover { background: #4B5563; }
+  .button.good { background: var(--good); }
+  label { display: block; margin: 12px 0 4px; font-weight: 600; }
+  input[type="text"], input[type="number"], input[type="email"], select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #FFF;
+  }
+  textarea { min-height: 80px; resize: vertical; }
+  .radio-group { margin: 6px 0; }
+  .radio-group label { display: inline-block; font-weight: normal; margin-right: 16px; }
+  .progress {
+    background: #E5E7EB;
+    border-radius: 999px;
+    height: 8px;
+    margin: 16px 0 24px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    background: var(--primary);
+    height: 100%;
+    transition: width 0.3s;
+  }
+  .scale-key {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .grid-wrap {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 76px;
+  }
+  .col-header {
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: var(--primary);
+  }
+  .col-count {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .slot {
+    width: 72px;
+    height: 56px;
+    background: var(--slot);
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    text-align: center;
+    padding: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    word-break: break-word;
+    line-height: 1.15;
+    transition: background 0.15s;
+  }
+  .slot.filled {
+    background: var(--slot-fill);
+    border: 1px solid var(--accent);
+    color: var(--primary);
+    font-weight: 500;
+  }
+  .slot.target {
+    background: #FFF59D;
+    border: 2px solid #F57F17;
+  }
+  .pool {
+    margin-top: 24px;
+  }
+  .pool-title {
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .pool-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pool-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    cursor: pointer;
+    max-width: 280px;
+    font-size: 13px;
+    line-height: 1.3;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .pool-card:hover {
+    border-color: var(--accent);
+    background: #F0F6FF;
+  }
+  .pool-card.selected {
+    border: 2px solid var(--primary);
+    background: #DBEAFE;
+    box-shadow: 0 0 0 3px rgba(31,56,100,0.2);
+  }
+  .pool-card .stmt-num {
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .selected-card-banner {
+    position: sticky;
+    top: 0;
+    background: #FFF3CD;
+    border: 2px solid #F57F17;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    z-index: 10;
+    font-size: 14px;
+  }
+  .selected-card-banner strong { color: var(--primary); }
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F0F6FF;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .help {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 8px 0;
+  }
+  .image-placeholder {
+    display: inline-block;
+    background: #FEF3C7;
+    border: 1px dashed #D97706;
+    color: #92400E;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .pool-card { display: flex; align-items: center; gap: 10px; }
+  .pool-card-text { flex: 1; }
+  .pool-card-img {
+    width: 60px; height: 60px; object-fit: cover;
+    border-radius: 4px; border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .banner-img {
+    display: block; max-width: 240px; max-height: 180px;
+    margin-top: 10px; border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  details summary { cursor: pointer; font-weight: 600; color: var(--primary); padding: 4px 0; }
+  details ul { margin: 8px 0; }
+  .small { font-size: 13px; color: var(--muted); }
+  .alert {
+    background: #FEE2E2;
+    border: 1px solid #DC2626;
+    color: #7F1D1D;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 12px 0;
+  }
+  .success {
+    background: #D1FAE5;
+    border: 1px solid #059669;
+    color: #064E3B;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 12px 0;
+  }
+  @media (max-width: 720px) {
+    .container { padding: 12px 8px 48px; }
+    .slot { width: 56px; height: 48px; font-size: 10px; }
+    .col-header { font-size: 12px; }
+    .column { min-width: 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
 
+<!-- ============ CONSENT PAGE ============ -->
+<div id="page-consent" class="page">
+  <div class="card">
+    <h1>Veiligheid, indicatoren en adoptie van kinderwagens: besluitvorming van ouders op de Nederlandse kinderwagenmarkt</h1>
+    <p>U wordt uitgenodigd om deel te nemen aan een onderzoek met de titel "Safety, Signals, and Stroller Adoption: Parental Decision-Making in the Dutch Stroller Market." Dit onderzoek wordt uitgevoerd door Gursahiba Dharni, masterstudent aan de Technische Universiteit Delft (TU Delft), Faculteit Techniek, Bestuur en Management, onder begeleiding van dr. Karolien van Nunen.</p>
+
+    <p>Het doel van dit onderzoek is om te begrijpen hoe ouders veiligheid afwegen ten opzichte van andere factoren zoals gebruiksgemak, prijs, compatibiliteit en merk bij het kiezen van een premium compacte kinderwagen in Nederland. De bevindingen zullen bijdragen aan academisch onderzoek op het gebied van consumentenveiligheid en product adoptie, en zullen worden gebruikt voor de afronding van een openbaar toegankelijke masterscriptie aan de TU Delft.</p>
+
+    <p>Als u instemt met deelname, wordt u gevraagd een Q-sort taak uit te voeren (ongeveer 20-30 minuten), waarin u ongeveer 50 korte uitspraken over kenmerken van kinderwagens rangschikt op een raster van "meest oneens" tot "meest eens." Uw Q-sort-antwoorden worden anoniem verzameld en opgeslagen. Er worden geen namen of direct identificeerbare gegevens bewaard als onderdeel van de onderzoeksgegevens. Alleen basis demografische informatie wordt verzameld (bijv. leeftijdscategorie, aantal kinderen, of dit uw eerste kinderwagen is).</p>
+
+    <p>Alle gegevens worden veilig opgeslagen op de institutionele systemen van TU Delft en zijn alleen toegankelijk voor de onderzoeker en begeleiders. Uw rangschikkingen worden openbaar gemaakt ter ondersteuning van de bijbehorende masterscriptie.</p>
+
+    <p>Uw deelname is volledig vrijwillig. U kunt weigeren om welke vraag dan ook te beantwoorden en u kunt zich op elk moment terugtrekken zonder opgaaf van reden en zonder enige gevolgen. Omdat Q-sort-gegevens anoniem worden verzameld, is het niet mogelijk om uw individuele antwoorden na indiening te verwijderen.</p>
+
+    <p>Als u vragen heeft over dit onderzoek, neem dan contact op met Gursahiba Dharni via <a href="mailto:G.K.Dharni@student.tudelft.nl">G.K.Dharni@student.tudelft.nl</a> of dr. Karolien van Nunen via <a href="mailto:K.L.L.vanNunen@tudelft.nl">K.L.L.vanNunen@tudelft.nl</a>.</p>
+
+    <p>Dank u wel voor uw overweging om deel te nemen aan dit onderzoek.</p>
+
+    <p style="margin-top: 24px;"><label><input type="checkbox" id="consent-checkbox"> Door op "Ok" te klikken, geef ik aan dat ik de bovenstaande informatie heb gelezen en begrepen en stem ik in met deelname.</label></p>
+
+    <button class="button" id="consent-btn" disabled onclick="goto('demographics')">Ok</button>
+  </div>
+</div>
+
+<!-- ============ DEMOGRAPHICS PAGE ============ -->
+<div id="page-demographics" class="page" style="display:none;">
+  <div class="card">
+    <h1>Een paar vragen over uzelf</h1>
+    <p class="help">Dit helpt mij te begrijpen wie deelgenomen heeft. Alle antwoorden zijn anoniem.</p>
+
+    <label for="d-country">Land van verblijf</label>
+    <select id="d-country">
+      <option value="">-- Selecteer --</option>
+      <option>Austria</option><option>Belgium</option><option>Bulgaria</option><option>Croatia</option>
+      <option>Cyprus</option><option>Czech Republic</option><option>Denmark</option><option>Estonia</option>
+      <option>Finland</option><option>France</option><option>Germany</option><option>Greece</option>
+      <option>Hungary</option><option>Ireland</option><option>Italy</option><option>Latvia</option>
+      <option>Lithuania</option><option>Luxembourg</option><option>Malta</option><option>Netherlands</option>
+      <option>Poland</option><option>Portugal</option><option>Romania</option><option>Slovakia</option>
+      <option>Slovenia</option><option>Spain</option><option>Sweden</option>
+      <option>United Kingdom</option><option>Switzerland</option><option>Norway</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="d-age">Uw leeftijdscategorie</label>
+    <select id="d-age">
+      <option value="">-- Selecteer --</option>
+      <option>Jonger dan 25</option><option>25-29</option><option>30-34</option>
+      <option>35-39</option><option>40-44</option><option>45 of ouder</option>
+    </select>
+
+    <label for="d-children">Aantal kinderen (alle leeftijden)</label>
+    <select id="d-children">
+      <option value="">-- Selecteer --</option>
+      <option>0 (eerste kind verwacht)</option><option>1</option><option>2</option><option>3 of meer</option>
+    </select>
+
+    <label for="d-youngest">Leeftijd van het jongste kind (of verwachte baby)</label>
+    <select id="d-youngest">
+      <option value="">-- Selecteer --</option>
+      <option>Zwanger / verwachten</option>
+      <option>0-6 maanden</option><option>7-12 maanden</option>
+      <option>1-2 jaar</option><option>3-4 jaar</option>
+      <option>5 of ouder</option>
+    </select>
+
+    <label for="d-ownstroller">Heeft u op dit moment een kinderwagen?</label>
+    <select id="d-ownstroller">
+      <option value="">-- Selecteer --</option>
+      <option>No</option>
+      <option>Ja - niet-premium (onder EUR 300)</option>
+      <option>Ja - middenklasse (EUR 300-500)</option>
+      <option>Ja - premium (EUR 500+)</option>
+    </select>
+
+    <label for="d-brand">Als u er een heeft, welk merk? (optioneel)</label>
+    <input type="text" id="d-brand" placeholder="bijv. Bugaboo, Joolz, Cybex, Maxi-Cosi, Stokke...">
+
+    <label for="d-budget">Prijsklasse die u zou overwegen voor een kinderwagen</label>
+    <select id="d-budget">
+      <option value="">-- Selecteer --</option>
+      <option>Onder EUR 300</option><option>EUR 300-500</option>
+      <option>EUR 500-800</option><option>EUR 800-1200</option><option>EUR 1200+</option>
+    </select>
+
+    <label for="d-firsttime">Bent u voor het eerst ouder?</label>
+    <select id="d-firsttime">
+      <option value="">-- Selecteer --</option>
+      <option>Yes</option><option>No</option><option>Eerste kind verwacht</option>
+    </select>
+
+    <div style="margin-top:24px; display:flex; justify-content:space-between;">
+      <button class="button secondary" onclick="goto('consent')">Terug</button>
+      <button class="button" id="demo-next-btn" onclick="submitDemographics()">Doorgaan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ INSTRUCTIONS PAGE ============ -->
+<div id="page-instructions" class="page" style="display:none;">
+  <div class="card">
+    <h1>Hoe het rangschikken werkt</h1>
+    <p>You will see 51 statements about premium compact strollers. Your job is to sort them into a pyramid grid from "<strong>most disagree</strong>" on the left (-5) to "<strong>most agree</strong>" on the right (+5).</p>
+    <h2>De voorwaarde</h2>
+    <p>Stel uzelf bij het rangschikken van elke uitspraak de vraag:</p>
+    <p style="background:#FEF3C7; padding:14px; border-radius:6px; border-left:4px solid #D97706; font-weight:600;">"Hoe belangrijk is deze factor in MIJN beslissing bij de aanschaf van een premium compacte kinderwagen?"</p>
+    <h2>Hoe plaats je een uitspraak</h2>
+    <ol>
+      <li>Klik op een uitspraak in de verzameling onderaan om deze te selecteren.</li>
+      <li>Klik op een leeg vakje in het raster om de uitspraak daar te plaatsen.</li>
+      <li>Klik op een geplaatste kaart om deze terug te zetten in de verzameling, of klik op een ander vakje om te wisselen.</li>
+    </ol>
+    <h2>Het raster</h2>
+    <p>Het raster has fixed column sizes (a fixed number of slots in each column). You must fill every slot to finish. The middle column (0) is for statements you feel neutral about.</p>
+    <p class="help">Tip: Begin met grofweg rangschikken - plaats uitspraken in een willekeurige kolom aan de kant waar u het in grote lijnen mee eens of oneens bent. Verfijn daarna.</p>
+    <div style="margin-top:24px; display:flex; justify-content:space-between;">
+      <button class="button secondary" onclick="goto('demographics')">Terug</button>
+      <button class="button" onclick="goto('sort')">Start het rangschikken</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SORT PAGE ============ -->
+<div id="page-sort" class="page" style="display:none;">
+  <div class="card">
+    <h1>Rangschik de uitspraken</h1>
+    <div class="status-bar">
+      <span id="status-text">0 van 51 geplaatst</span>
+      <span><strong>Vraag:</strong> Hoe belangrijk is deze factor in MIJN beslissing bij de aanschaf van een premium compacte kinderwagen?</span>
+    </div>
+    <div id="selected-banner" class="selected-card-banner" style="display:none;"></div>
+    <div class="progress"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+    <div class="scale-key">
+      <span>← Meest oneens</span>
+      <span>Neutraal</span>
+      <span>Meest eens →</span>
+    </div>
+    <div class="grid-wrap" id="grid"></div>
+
+    <div class="pool">
+      <div class="pool-title">Verzameling: uitspraken die nog geplaatst moeten worden (<span id="pool-count">51</span>)</div>
+      <div class="pool-list" id="pool"></div>
+    </div>
+
+    <div style="margin-top:24px; display:flex; justify-content:space-between;">
+      <button class="button secondary" onclick="goto('instructions')">Terug naar instructies</button>
+      <button class="button" id="sort-next-btn" disabled onclick="goto('postsort')">Doorgaan als alle 51 geplaatst zijn</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ POST-SORT PAGE ============ -->
+<div id="page-postsort" class="page" style="display:none;">
+  <div class="card">
+    <h1>Drie korte vervolgvragen</h1>
+
+    <label for="ps-mostagree">1. Waarom heeft u de uitspraken die u aan de "+5 / meest eens" kant heeft geplaatst, daar geplaatst?</label>
+    <textarea id="ps-mostagree" placeholder="Een zin of twee is prima."></textarea>
+
+    <label for="ps-mostdisagree">2. Waarom heeft u de uitspraken die u aan de "-5 / meest oneens" kant heeft geplaatst, daar geplaatst?</label>
+    <textarea id="ps-mostdisagree" placeholder="Een zin of twee is prima."></textarea>
+
+    <label for="ps-missing">3. Is er nog iets belangrijks over het kiezen van een premium compacte kinderwagen dat geen van de 51 uitspraken behandelde?</label>
+    <textarea id="ps-missing" placeholder="Optioneel - laat leeg als u niets te binnen schiet."></textarea>
+
+    <div style="margin-top:24px; display:flex; justify-content:space-between;">
+      <button class="button secondary" onclick="goto('sort')">Terug naar het rangschikken</button>
+      <button class="button good" onclick="finishStudy()">Afronden en mijn antwoorden downloaden</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FINISH PAGE ============ -->
+<div id="page-finish" class="page" style="display:none;">
+  <div class="card">
+    <h1>Dank u wel!</h1>
+    <p>Your sort is complete.</p>
+    <div id="finish-status"></div>
+    <h2>Over dit onderzoek</h2>
+    <p>Dit onderzoek is onderdeel van een masterscriptie over de prioriteiten van ouders bij het kiezen van premium compacte kinderwagens. Uw rangschikking wordt samen met die van anderen geanalyseerd met de Q-methode om gedeelde standpunten te identificeren.</p>
+    <p class="small">Als u vragen heeft over het onderzoek, neem dan contact op met de onderzoeker via <a href="mailto:G.K.Dharni@student.tudelft.nl">G.K.Dharni@student.tudelft.nl</a> of de begeleider via <a href="mailto:K.L.L.vanNunen@tudelft.nl">K.L.L.vanNunen@tudelft.nl</a>.</p>
+    <p class="small">Heeft u een back-upkopie van uw antwoorden nodig?</p>
+    <button class="button secondary" onclick="downloadCSV()">Mijn antwoorden downloaden</button>
+  </div>
+</div>
+
+<!-- Hidden iframe used as submission target to bypass CORS -->
+<iframe id="submission_iframe" name="submission_iframe" style="display:none;"></iframe>
+
+<script>
+// ============ CONFIG ============
+// Paste your Google Apps Script Web App URL here AFTER following SETUP-GOOGLE-SHEETS.md
+// Example: "https://script.google.com/macros/s/AKfycbxxxxx/exec"
+// If left as the placeholder below, responses will only be downloadable as CSV.
+const SUBMISSION_URL = "https://script.google.com/macros/s/AKfycbxkDxZw0I7LmgDZh8k1PG_dvZ_wj13t8ukqR6uiiowC0eFNdNBPELcmuE7BrfT-g4hZ/exec";
+
+// Researcher contact email (shown on the finish page)
+const RESEARCHER_EMAIL = "G.K.Dharni@student.tudelft.nl";
+
+// ============ DATA ============
+const STATEMENTS = [
+  { n: 1,  text: "Een 5-puntsgordel die het kind veilig op zijn plaats houdt, is essentieel voor mij.", cat: "Safety", code: "SF01", image: "images/harness.jpg" },
+  { n: 2,  text: "Een gesp die betrouwbaar sluit, is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF01", image: "images/buckle.jpg" },
+  { n: 3,  text: "Een systeem dat voorkomt dat de kinderwagen wegrolt als ik het handvat loslaat, is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF02", image: "" },
+  { n: 4,  text: "Een pols- of veiligheidskoord dat mij met de kinderwagen verbindt, is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF02", image: "images/tether-strap.jpg" },
+  { n: 5,  text: "Een betrouwbare parkeerrem die stevig is op een helling, is essentieel voor mij.", cat: "Safety", code: "SF03", image: "" },
+  { n: 6,  text: "Vering die de kinderwagen stabiel houdt op een oneffen ondergrond, is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF04", image: "" },
+  { n: 7,  text: "Een breed, laag onderstel dat de kinderwagen rechtop houdt, is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF04", image: "" },
+  { n: 8,  text: "Een inklapmechanisme dat veilig vergrendeld blijft terwijl mijn kind erin zit, is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF05", image: "" },
+  { n: 9,  text: "Bescherming tegen het beknellen van vingers tijdens het inklappen is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF05", image: "" },
+  { n: 10, text: "Ergonomische zitting die de houding van mijn kind ondersteunt, is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF06", image: "" },
+  { n: 11, text: "Een volledig vlakke ligstand die veilig gebruik vanaf de geboorte mogelijk maakt, is essentieel voor mij.", cat: "Safety", code: "SF07", image: "images/recline.jpg" },
+  { n: 12, text: "Ademende stoffen die mijn kind helpen om gemakkelijk te ademen, zijn essentieel voor mij.", cat: "Safety", code: "SF08", image: "" },
+  { n: 13, text: "Een zonnekap met gecertificeerde UV-bescherming (bijv. UPF 50+) is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF09", image: "" },
+  { n: 14, text: "Goede luchtcirculatie in de kap en zitting om mijn kind koel te houden, is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF10", image: "" },
+  { n: 15, text: "Bescherming tegen koude temperaturen (thermische voering, voetenzak) is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF11", image: "" },
+  { n: 16, text: "Bescherming tegen regen en wind (regenhoes, windscherm) is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF11", image: "" },
+  { n: 17, text: "Cool-touch-stoffen die comfortabel blijven in direct zonlicht, zijn een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF12", image: "" },
+  { n: 18, text: "Mijn kind gemakkelijk kunnen zien tijdens het wandelen, is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF13", image: "" },
+  { n: 19, text: "Geïntegreerde lichten en reflecterende details voor avondwandelingen zijn een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF14", image: "" },
+  { n: 20, text: "Een veiligheidsbeugel aan de voorkant van de zitting is een belangrijke factor in mijn beslissing.", cat: "Safety", code: "SF15", image: "images/bumper-bar.jpg" },
+  { n: 21, text: "Een kinderwagen gemaakt van gecertificeerde niet-toxische materialen is essentieel voor mij.", cat: "Safety", code: "SF16", image: "" },
+  { n: 22, text: "Onafhankelijke veiligheidstesten door een met naam genoemde, erkende organisatie is een belangrijke factor in mijn beslissing.", cat: "Verification", code: "VER", image: "" },
+  { n: 23, text: "Een kinderwagen die voldoet aan de Europese veiligheidsnormen (bijv. EN 1888) is essentieel voor mij.", cat: "Verification", code: "VER", image: "" },
+  { n: 24, text: "Een merk dat zijn daadwerkelijke veiligheidstestresultaten publiceert, is een belangrijke factor in mijn beslissing.", cat: "Verification", code: "VER", image: "" },
+  { n: 25, text: "Een merk dat onafhankelijke inspectie van zijn fabriek toelaat (niet alleen van het eindproduct) is een belangrijke factor in mijn beslissing.", cat: "Verification", code: "VER", image: "" },
+  { n: 26, text: "Een hogere prijs geeft mij de geruststelling dat een kinderwagen goed ontworpen is.", cat: "Price", code: "PR", image: "" },
+  { n: 27, text: "Ik ben bereid meer dan EUR 500 uit te geven aan een kinderwagen als deze premium veiligheids- en kwaliteitskenmerken biedt.", cat: "Price", code: "PR", image: "" },
+  { n: 28, text: "Een goede restwaarde bij doorverkoop is een belangrijke factor in mijn beslissing.", cat: "Price", code: "PR", image: "" },
+  { n: 29, text: "Ik koop liever één premium kinderwagen dan in de loop der tijd meerdere goedkopere.", cat: "Price", code: "PR", image: "" },
+  { n: 30, text: "De kosten van accessoires (reiswieg, autostoeladapters, voetenzak) zijn een belangrijke factor in mijn beslissing.", cat: "Price", code: "PR", image: "images/accessories.jpg" },
+  { n: 31, text: "De kinderwagen met één hand kunnen inklappen (zodat de andere hand het kind kan vasthouden) is een belangrijke factor in mijn beslissing.", cat: "Usability", code: "US", image: "" },
+  { n: 32, text: "Een lichtgewicht kinderwagen (onder de 8 kg) is een belangrijke factor in mijn beslissing.", cat: "Usability", code: "US", image: "" },
+  { n: 33, text: "Een kinderwagen die gemakkelijk in een kofferbak past, is een belangrijke factor in mijn beslissing.", cat: "Usability", code: "US", image: "" },
+  { n: 34, text: "Een grote opbergmand onder de zitting is een belangrijke factor in mijn beslissing.", cat: "Usability", code: "US", image: "" },
+  { n: 35, text: "Een omkeerbare zitting (naar ouder of met het gezicht naar voren gericht) is een belangrijke factor in mijn beslissing.", cat: "Usability", code: "US", image: "" },
+  { n: 36, text: "Een kinderwagen die weinig ruimte inneemt wanneer deze ingeklapt is (bijv. eentje die past in een gang) is een belangrijke factor in mijn beslissing.", cat: "Usability", code: "US", image: "" },
+  { n: 37, text: "Een in hoogte verstelbaar handvat dat past bij verschillende gezinsleden, is een belangrijke factor in mijn beslissing.", cat: "Caregiver ergonomics", code: "CE", image: "" },
+  { n: 38, text: "Een kinderwagen die voor mij comfortabel is om te duwen tijdens lange wandelingen, is een belangrijke factor in mijn beslissing.", cat: "Caregiver ergonomics", code: "CE", image: "" },
+  { n: 39, text: "Een kinderwagen die gemakkelijk met één hand te besturen is, is een belangrijke factor in mijn beslissing.", cat: "Caregiver ergonomics", code: "CE", image: "" },
+  { n: 40, text: "Compatibiliteit met mijn voorkeursautostoel is een belangrijke factor in mijn beslissing.", cat: "Compatibility", code: "CO", image: "" },
+  { n: 41, text: "De mogelijkheid om een reiswieg toe te voegen voor pasgeborenen is een belangrijke factor in mijn beslissing.", cat: "Compatibility", code: "CO", image: "images/carrycot.jpg" },
+  { n: 42, text: "Een kinderwagen die kan worden aangepast naarmate mijn kind groeit (van reiswieg naar zitting) is een belangrijke factor in mijn beslissing.", cat: "Compatibility", code: "CO", image: "" },
+  { n: 43, text: "Een breed assortiment aan beschikbare accessoires (bekerhouder, parasol, voetenzak) is een belangrijke factor in mijn beslissing.", cat: "Compatibility", code: "CO", image: "" },
+  { n: 44, text: "De mogelijkheid om de kinderwagen om te bouwen tot een duokinderwagen voor een tweede kind is een belangrijke factor in mijn beslissing.", cat: "Compatibility", code: "CO", image: "" },
+  { n: 45, text: "De historie en jarenlange ervaring van een merk zijn een belangrijke factor in mijn beslissing.", cat: "Brand", code: "BR", image: "" },
+  { n: 46, text: "Land van herkomst (bijv. Made in Italy, Duitsland, Nederland) is een belangrijke factor in mijn beslissing.", cat: "Brand", code: "BR", image: "" },
+  { n: 47, text: "Een samenwerking tussen een merk en een luxe auto- of modelabel is een belangrijke factor in mijn beslissing.", cat: "Brand", code: "BR", image: "" },
+  { n: 48, text: "Aanbevelingen van vrienden en familie zijn een belangrijke factor in mijn beslissing.", cat: "Brand", code: "BR", image: "" },
+  { n: 49, text: "Een merk dat openlijk en transparant omgaat met eerdere terugroepacties is een belangrijke factor in mijn beslissing.", cat: "Brand", code: "BR", image: "" },
+  { n: 50, text: "Het visuele ontwerp en de kleur van de kinderwagen zijn een belangrijke factor in mijn beslissing.", cat: "Other", code: "OT", image: "" },
+  { n: 51, text: "Duurzame materialen en ethische productie zijn een belangrijke factor in mijn beslissing.", cat: "Other", code: "OT", image: "" },
+];
+
+// Distribution: -5 to +5, total = 51
+// 2-3-4-5-7-9-7-5-4-3-2
+const DISTRIBUTION = [
+  { value: -5, slots: 2 },
+  { value: -4, slots: 3 },
+  { value: -3, slots: 4 },
+  { value: -2, slots: 5 },
+  { value: -1, slots: 7 },
+  { value:  0, slots: 9 },
+  { value:  1, slots: 7 },
+  { value:  2, slots: 5 },
+  { value:  3, slots: 4 },
+  { value:  4, slots: 3 },
+  { value:  5, slots: 2 },
+];
+
+// ============ STATE ============
+const state = {
+  consent: false,
+  demographics: {},
+  placements: {}, // statementNumber -> column value (-5 to 5)
+  selectedStatement: null,
+  postsort: {},
+  startTime: null,
+  endTime: null,
+  participantId: genId(),
+  submitted: false,
+  submissionStatus: null, // 'ok' | 'error' | null
+};
+
+function genId() {
+  return 'p_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+}
+
+// ============ NAVIGATION ============
+function goto(page) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.getElementById('page-' + page).style.display = 'block';
+  window.scrollTo(0, 0);
+  if (page === 'sort') renderSort();
+}
+
+// ============ CONSENT ============
+document.getElementById('consent-checkbox').addEventListener('change', (e) => {
+  state.consent = e.target.checked;
+  document.getElementById('consent-btn').disabled = !state.consent;
+});
+
+// ============ DEMOGRAPHICS ============
+function submitDemographics() {
+  const fields = ['country','age','children','youngest','ownstroller','brand','budget','firsttime'];
+  const d = {};
+  let missingRequired = false;
+  fields.forEach(f => {
+    const el = document.getElementById('d-' + f);
+    d[f] = el.value;
+    if (f !== 'brand' && !el.value) missingRequired = true;
+  });
+  if (missingRequired) {
+    alert('Please answer all questions (only the brand name is optional).');
+    return;
+  }
+  state.demographics = d;
+  state.startTime = new Date().toISOString();
+  goto('instructions');
+}
+
+// ============ SORT ============
+function renderSort() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  DISTRIBUTION.forEach(col => {
+    const colDiv = document.createElement('div');
+    colDiv.className = 'column';
+    colDiv.innerHTML = `<div class="col-header">${col.value > 0 ? '+'+col.value : col.value}</div><div class="col-count">${col.slots} slots</div>`;
+    for (let i = 0; i < col.slots; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+      slot.dataset.col = col.value;
+      slot.dataset.idx = i;
+      slot.onclick = () => slotClick(col.value, i, slot);
+      // check if a placed statement belongs here
+      const placedStmt = Object.keys(state.placements).find(n =>
+        state.placements[n].col === col.value && state.placements[n].idx === i
+      );
+      if (placedStmt) {
+        slot.classList.add('filled');
+        slot.textContent = '#' + placedStmt;
+      }
+      colDiv.appendChild(slot);
+    }
+    grid.appendChild(colDiv);
+  });
+  renderPool();
+  updateStatus();
+}
+
+function renderPool() {
+  const pool = document.getElementById('pool');
+  pool.innerHTML = '';
+  const unplaced = STATEMENTS.filter(s => !state.placements[s.n]);
+  unplaced.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'pool-card';
+    if (state.selectedStatement === s.n) card.classList.add('selected');
+    const textHtml = `<div class="pool-card-text"><span class="stmt-num">${s.n}.</span>${escapeHtml(s.text)}</div>`;
+    const imgHtml = s.image
+      ? `<img class="pool-card-img" src="${escapeHtml(s.image)}" alt="" onerror="this.style.display='none'">`
+      : '';
+    card.innerHTML = textHtml + imgHtml;
+    card.onclick = () => selectStatement(s.n);
+    pool.appendChild(card);
+  });
+  document.getElementById('pool-count').textContent = unplaced.length;
+}
+
+function selectStatement(n) {
+  state.selectedStatement = (state.selectedStatement === n) ? null : n;
+  renderPool();
+  updateBanner();
+  highlightAvailableSlots();
+}
+
+function highlightAvailableSlots() {
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('target'));
+  if (state.selectedStatement) {
+    document.querySelectorAll('.slot:not(.filled)').forEach(s => s.classList.add('target'));
+  }
+}
+
+function updateBanner() {
+  const banner = document.getElementById('selected-banner');
+  if (state.selectedStatement) {
+    const stmt = STATEMENTS.find(s => s.n === state.selectedStatement);
+    const imgHtml = stmt.image
+      ? `<img class="banner-img" src="${escapeHtml(stmt.image)}" alt="" onerror="this.style.display='none'">`
+      : '';
+    banner.innerHTML = `<strong>Geselecteerd: Uitspraak ${stmt.n}.</strong> ${escapeHtml(stmt.text)}${imgHtml}<br><span class="help">Klik op een leeg vakje om de uitspraak te plaatsen, of klik op een andere uitspraak om te wisselen.</span>`;
+    banner.style.display = 'block';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+function slotClick(col, idx, slotEl) {
+  // Case 1: there is a placed statement here -> move it back to pool
+  const placedN = Object.keys(state.placements).find(n =>
+    state.placements[n].col === col && state.placements[n].idx === idx
+  );
+  if (placedN) {
+    delete state.placements[placedN];
+    renderSort();
+    return;
+  }
+  // Case 2: a statement is selected -> place it
+  if (state.selectedStatement) {
+    state.placements[state.selectedStatement] = { col, idx };
+    state.selectedStatement = null;
+    renderSort();
+    return;
+  }
+  // Case 3: empty slot, nothing selected -> nudge
+  // (do nothing, just keep showing pool)
+}
+
+function updateStatus() {
+  const placed = Object.keys(state.placements).length;
+  const total = STATEMENTS.length;
+  document.getElementById('status-text').textContent = `${placed} of ${total} placed`;
+  document.getElementById('progress-fill').style.width = ((placed / total) * 100) + '%';
+  document.getElementById('sort-next-btn').disabled = (placed < total);
+  if (placed === total) {
+    document.getElementById('sort-next-btn').textContent = 'Doorgaan naar vervolgvragen';
+  }
+}
+
+// ============ POST-SORT ============
+async function finishStudy() {
+  state.postsort.mostagree = document.getElementById('ps-mostagree').value;
+  state.postsort.mostdisagree = document.getElementById('ps-mostdisagree').value;
+  state.postsort.missing = document.getElementById('ps-missing').value;
+  state.endTime = new Date().toISOString();
+
+  // Show submitting state
+  goto('finish');
+  renderFinishStatus('submitting');
+
+  // Try to submit to Google Sheets if configured
+  let submissionOk = false;
+  if (SUBMISSION_URL && !SUBMISSION_URL.startsWith('PASTE_')) {
+    try {
+      submissionOk = await submitToSheet();
+    } catch (err) {
+      console.error('Submission failed:', err);
+      submissionOk = false;
+    }
+  }
+  state.submitted = submissionOk;
+  state.submissionStatus = submissionOk ? 'ok' : 'error';
+  renderFinishStatus(submissionOk ? 'ok' : 'error');
+
+  // Always offer the CSV as a backup
+  downloadCSV();
+}
+
+async function submitToSheet() {
+  // Hidden-form submission via iframe target.
+  // This bypasses CORS entirely - Apps Script Web Apps don't return permissive
+  // CORS headers to fetch(), so we use a classic form POST instead.
+  // Trade-off: we can't read the response body, so we assume success once the
+  // iframe loads or after a short timeout. The CSV download remains as backup.
+  return new Promise((resolve) => {
+    const payload = {
+      participant_id: state.participantId,
+      language: "nl",
+      start_time: state.startTime,
+      end_time: state.endTime,
+      demographics: state.demographics,
+      placements: Object.fromEntries(
+        Object.entries(state.placements).map(([k, v]) => [k, v.col])
+      ),
+      postsort: state.postsort,
+    };
+
+    const iframe = document.getElementById('submission_iframe');
+    if (!iframe) {
+      resolve(false);
+      return;
+    }
+
+    let resolved = false;
+    const finish = (ok) => {
+      if (resolved) return;
+      resolved = true;
+      clearTimeout(timer);
+      iframe.onload = null;
+      resolve(ok);
+    };
+
+    // If the iframe loads (i.e. Apps Script responded with anything), call it a success.
+    iframe.onload = () => finish(true);
+
+    // Safety net: even if onload never fires (some browsers swallow it for cross-origin),
+    // assume the POST went through after 8 seconds.
+    const timer = setTimeout(() => finish(true), 8000);
+
+    // Build and submit a real form into the hidden iframe.
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = SUBMISSION_URL;
+    form.target = 'submission_iframe';
+    form.acceptCharset = 'UTF-8';
+    form.enctype = 'application/x-www-form-urlencoded';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload';
+    input.value = JSON.stringify(payload);
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    try {
+      form.submit();
+    } catch (err) {
+      finish(false);
+    }
+    setTimeout(() => {
+      if (form.parentNode) form.parentNode.removeChild(form);
+    }, 100);
+  });
+}
+
+function renderFinishStatus(status) {
+  const el = document.getElementById('finish-status');
+  if (!el) return;
+  if (status === 'submitting') {
+    el.innerHTML = '<div style="background:#FEF3C7;border:1px solid #D97706;padding:14px;border-radius:6px;"><strong>Uw antwoorden worden ingediend...</strong><br>Houd deze pagina enkele seconden open.</div>';
+  } else if (status === 'ok') {
+    el.innerHTML = '<div class="success"><strong>Your responses have been sent.</strong> Thank you for taking part. A backup copy has also been downloaded to your computer - you can keep or delete it.</div>';
+  } else if (status === 'error') {
+    el.innerHTML = '<div class="alert"><strong>Automatische indiening is niet gelukt.</strong> Uw antwoorden zijn als CSV-bestand gedownload. <strong>Stuur dat CSV-bestand per e-mail naar de onderzoeker op ' + escapeHtml(RESEARCHER_EMAIL) + '</strong> zodat uw antwoorden worden meegenomen in het onderzoek. Dank u wel!</div>';
+  }
+}
+
+// ============ CSV EXPORT ============
+function generateCSV() {
+  const lines = [];
+  // Metadata block
+  lines.push('# Q-Sort Response Export');
+  lines.push('# Generated: ' + new Date().toISOString());
+  lines.push('# Start time: ' + (state.startTime || ''));
+  lines.push('# End time: ' + (state.endTime || ''));
+  lines.push('');
+  // Demographics
+  lines.push('## DEMOGRAPHICS');
+  lines.push('field,value');
+  Object.keys(state.demographics).forEach(k => {
+    lines.push(csvEscape(k) + ',' + csvEscape(state.demographics[k]));
+  });
+  lines.push('');
+  // Sort data (KADE-compatible format: one row per statement)
+  lines.push('## SORT (KADE format)');
+  lines.push('statement_number,statement_text,category,code,position');
+  STATEMENTS.forEach(s => {
+    const pos = state.placements[s.n] ? state.placements[s.n].col : '';
+    lines.push([s.n, csvEscape(s.text), csvEscape(s.cat), csvEscape(s.code), pos].join(','));
+  });
+  lines.push('');
+  // Sort vector (one row, positions in statement order - native KADE format)
+  lines.push('## SORT VECTOR (one column per statement)');
+  lines.push(STATEMENTS.map(s => 'S' + s.n).join(','));
+  lines.push(STATEMENTS.map(s => state.placements[s.n] ? state.placements[s.n].col : '').join(','));
+  lines.push('');
+  // Post-sort
+  lines.push('## POST-SORT');
+  lines.push('question,answer');
+  lines.push('most_agree_reason,' + csvEscape(state.postsort.mostagree || ''));
+  lines.push('most_disagree_reason,' + csvEscape(state.postsort.mostdisagree || ''));
+  lines.push('missing_topics,' + csvEscape(state.postsort.missing || ''));
+  return lines.join('\n');
+}
+
+function csvEscape(v) {
+  if (v == null) return '';
+  v = String(v);
+  if (v.includes(',') || v.includes('"') || v.includes('\n')) {
+    return '"' + v.replace(/"/g, '""') + '"';
+  }
+  return v;
+}
+
+function downloadCSV() {
+  const csv = generateCSV();
+  const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  const id = Math.random().toString(36).slice(2, 8);
+  const filename = `qsort_${ts}_${id}.csv`;
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ============ UTILS ============
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+// ============ INIT ============
+goto('consent');
+</script>
+</div>
+</body>
+</html>
